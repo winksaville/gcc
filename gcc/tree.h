@@ -1880,7 +1880,13 @@ extern machine_mode element_mode (const_tree t);
 
 /* If nonzero, this type is `restrict'-qualified, in the C sense of
    the term.  */
-#define TYPE_RESTRICT(NODE) (TYPE_CHECK (NODE)->type_common.restrict_flag)
+#define TYPE_RESTRICT(NODE) \
+  (NOT_RECORD_OR_UNION_CHECK (NODE)->type_common.restrict_flag)
+
+/* If nonzero, this type is an empty record, in the C++ sense of the
+   term.  */
+#define TYPE_EMPTY_RECORD(NODE) \
+  (RECORD_OR_UNION_CHECK (NODE)->type_common.restrict_flag)
 
 /* If nonzero, type's name shouldn't be emitted into debug info.  */
 #define TYPE_NAMELESS(NODE) (TYPE_CHECK (NODE)->base.u.bits.nameless_flag)
@@ -1905,7 +1911,8 @@ extern machine_mode element_mode (const_tree t);
   ((int) ((TYPE_READONLY (NODE) * TYPE_QUAL_CONST)		\
 	  | (TYPE_VOLATILE (NODE) * TYPE_QUAL_VOLATILE)		\
 	  | (TYPE_ATOMIC (NODE) * TYPE_QUAL_ATOMIC)		\
-	  | (TYPE_RESTRICT (NODE) * TYPE_QUAL_RESTRICT)		\
+	  | ((POINTER_TYPE_P (NODE) && TYPE_RESTRICT (NODE))	\
+	     * TYPE_QUAL_RESTRICT)				\
 	  | (ENCODE_QUAL_ADDR_SPACE (TYPE_ADDR_SPACE (NODE)))))
 
 /* The same as TYPE_QUALS without the address space qualifications.  */
@@ -1913,14 +1920,16 @@ extern machine_mode element_mode (const_tree t);
   ((int) ((TYPE_READONLY (NODE) * TYPE_QUAL_CONST)		\
 	  | (TYPE_VOLATILE (NODE) * TYPE_QUAL_VOLATILE)		\
 	  | (TYPE_ATOMIC (NODE) * TYPE_QUAL_ATOMIC)		\
-	  | (TYPE_RESTRICT (NODE) * TYPE_QUAL_RESTRICT)))
+	  | ((POINTER_TYPE_P (NODE) && TYPE_RESTRICT (NODE))	\
+	     * TYPE_QUAL_RESTRICT)))
 
 /* The same as TYPE_QUALS without the address space and atomic 
    qualifications.  */
 #define TYPE_QUALS_NO_ADDR_SPACE_NO_ATOMIC(NODE)		\
   ((int) ((TYPE_READONLY (NODE) * TYPE_QUAL_CONST)		\
 	  | (TYPE_VOLATILE (NODE) * TYPE_QUAL_VOLATILE)		\
-	  | (TYPE_RESTRICT (NODE) * TYPE_QUAL_RESTRICT)))
+	  | ((POINTER_TYPE_P (NODE) && TYPE_RESTRICT (NODE))	\
+	     * TYPE_QUAL_RESTRICT)))
 
 /* These flags are available for each language front end to use internally.  */
 #define TYPE_LANG_FLAG_0(NODE) (TYPE_CHECK (NODE)->type_common.lang_flag_0)

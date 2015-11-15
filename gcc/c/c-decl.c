@@ -5490,7 +5490,8 @@ grokdeclarator (const struct c_declarator *declarator,
      seems most appropriate to do so).  */
   element_type = strip_array_types (type);
   constp = declspecs->const_p + TYPE_READONLY (element_type);
-  restrictp = declspecs->restrict_p + TYPE_RESTRICT (element_type);
+  restrictp = declspecs->restrict_p + (POINTER_TYPE_P (element_type)
+				       && TYPE_RESTRICT (element_type));
   volatilep = declspecs->volatile_p + TYPE_VOLATILE (element_type);
   atomicp = declspecs->atomic_p + TYPE_ATOMIC (element_type);
   as1 = declspecs->address_space;

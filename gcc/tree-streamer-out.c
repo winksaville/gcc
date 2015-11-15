@@ -321,7 +321,10 @@ pack_ts_type_common_value_fields (struct bitpack_d *bp, tree expr)
   else if (TREE_CODE (expr) == ARRAY_TYPE)
     bp_pack_value (bp, TYPE_NONALIASED_COMPONENT (expr), 1);
   bp_pack_value (bp, TYPE_PACKED (expr), 1);
-  bp_pack_value (bp, TYPE_RESTRICT (expr), 1);
+  if (RECORD_OR_UNION_TYPE_P (expr))
+    bp_pack_value (bp, TYPE_EMPTY_RECORD (expr), 1);
+  else
+    bp_pack_value (bp, TYPE_RESTRICT (expr), 1);
   bp_pack_value (bp, TYPE_USER_ALIGN (expr), 1);
   bp_pack_value (bp, TYPE_READONLY (expr), 1);
   bp_pack_var_len_unsigned (bp, TYPE_PRECISION (expr));

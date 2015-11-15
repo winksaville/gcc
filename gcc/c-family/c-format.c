@@ -2537,7 +2537,8 @@ check_format_types (location_t loc, format_wanted_type *types)
 		  && (TYPE_READONLY (cur_type)
 		      || TYPE_VOLATILE (cur_type)
 		      || TYPE_ATOMIC (cur_type)
-		      || TYPE_RESTRICT (cur_type)))
+		      || (POINTER_TYPE_P (cur_type)
+			  && TYPE_RESTRICT (cur_type))))
 		warning (OPT_Wformat_, "extra type qualifiers in format "
 			 "argument (argument %d)",
 			 arg_num);

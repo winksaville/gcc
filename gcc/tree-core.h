@@ -1207,6 +1207,14 @@ struct GTY(()) tree_base {
 
        REF_REVERSE_STORAGE_ORDER in
            BIT_FIELD_REF, MEM_REF
+
+   restrict_flag:
+
+       TYPE_RESTRICT in
+	  NOT_RECORD_OR_UNION_TYPE
+
+       TYPE_EMPTY_RECORD in
+           RECORD_OR_UNION_TYPE
 */
 
 struct GTY(()) tree_typed {

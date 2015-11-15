@@ -584,7 +584,12 @@ print_node (FILE *file, const char *prefix, tree node, int indent)
       if (TYPE_PACKED (node))
 	fputs (" packed", file);
 
-      if (TYPE_RESTRICT (node))
+      if (RECORD_OR_UNION_TYPE_P (node))
+	{
+	  if (TYPE_EMPTY_RECORD (node))
+	    fputs (" empty-record", file);
+	}
+      else if (TYPE_RESTRICT (node))
 	fputs (" restrict", file);
 
       if (TYPE_LANG_FLAG_0 (node))

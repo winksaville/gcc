@@ -1096,16 +1096,20 @@ hash_tree (struct streamer_tree_cache_d *cache, hash_map<tree, hashval_t> *map, 
  	 no streaming.  */
       hstate.add_flag (TYPE_NEEDS_CONSTRUCTING (t));
       hstate.add_flag (TYPE_PACKED (t));
-      hstate.add_flag (TYPE_RESTRICT (t));
       hstate.add_flag (TYPE_USER_ALIGN (t));
       hstate.add_flag (TYPE_READONLY (t));
       if (RECORD_OR_UNION_TYPE_P (t))
 	{
+	  hstate.add_flag (TYPE_EMPTY_RECORD (t));
 	  hstate.add_flag (TYPE_TRANSPARENT_AGGR (t));
 	  hstate.add_flag (TYPE_FINAL_P (t));
 	}
-      else if (code == ARRAY_TYPE)
-	hstate.add_flag (TYPE_NONALIASED_COMPONENT (t));
+      else 
+	{
+	  hstate.add_flag (TYPE_RESTRICT (t));
+	  if (code == ARRAY_TYPE)
+	    hstate.add_flag (TYPE_NONALIASED_COMPONENT (t));
+	}
       hstate.commit_flag ();
       hstate.add_int (TYPE_PRECISION (t));
       hstate.add_int (TYPE_ALIGN (t));

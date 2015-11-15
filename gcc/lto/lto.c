@@ -1149,13 +1149,17 @@ compare_tree_sccs_1 (tree t1, tree t2, tree **map)
       compare_values (TYPE_NEEDS_CONSTRUCTING);
       if (RECORD_OR_UNION_TYPE_P (t1))
 	{
+	  compare_values (TYPE_EMPTY_RECORD);
 	  compare_values (TYPE_TRANSPARENT_AGGR);
 	  compare_values (TYPE_FINAL_P);
 	}
-      else if (code == ARRAY_TYPE)
-	compare_values (TYPE_NONALIASED_COMPONENT);
+      else
+	{
+	  compare_values (TYPE_RESTRICT);
+	  if (code == ARRAY_TYPE)
+	    compare_values (TYPE_NONALIASED_COMPONENT);
+	}
       compare_values (TYPE_PACKED);
-      compare_values (TYPE_RESTRICT);
       compare_values (TYPE_USER_ALIGN);
       compare_values (TYPE_READONLY);
       compare_values (TYPE_PRECISION);

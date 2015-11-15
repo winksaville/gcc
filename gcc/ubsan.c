@@ -382,7 +382,9 @@ ubsan_type_descriptor (tree type, enum ubsan_print_style pstyle)
       pp_printf (&pretty_name, "'%s%s%s%s%s%s%s",
 		 TYPE_VOLATILE (type2) ? "volatile " : "",
 		 TYPE_READONLY (type2) ? "const " : "",
-		 TYPE_RESTRICT (type2) ? "restrict " : "",
+		 (RECORD_OR_UNION_TYPE_P (type2)
+		  ? (TYPE_EMPTY_RECORD (type2) ? "empty-record" : "")
+		  : (TYPE_RESTRICT (type2) ? "restrict " : "")),
 		 TYPE_ATOMIC (type2) ? "_Atomic " : "",
 		 TREE_CODE (type2) == RECORD_TYPE
 		 ? "struct "
