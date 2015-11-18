@@ -7931,6 +7931,9 @@ static int
 classify_argument (machine_mode mode, const_tree type,
 		   enum x86_64_reg_class classes[MAX_CLASSES], int bit_offset)
 {
+  if (type && RECORD_OR_UNION_TYPE_P (type) && TYPE_EMPTY_RECORD (type))
+    return 0;
+
   HOST_WIDE_INT bytes =
     (mode == BLKmode) ? int_size_in_bytes (type) : (int) GET_MODE_SIZE (mode);
   int words = CEIL (bytes + (bit_offset % 64) / 8, UNITS_PER_WORD);
@@ -8382,6 +8385,9 @@ construct_container (machine_mode mode, machine_mode orig_mode,
   static bool issued_sse_ret_error;
   static bool issued_x87_ret_error;
 
+  if (type && RECORD_OR_UNION_TYPE_P (type) && TYPE_EMPTY_RECORD (type))
+    return NULL;
+
   machine_mode tmpmode;
   int bytes =
     (mode == BLKmode) ? int_size_in_bytes (type) : (int) GET_MODE_SIZE (mode);
@@ -8790,6 +8796,9 @@ static void
 ix86_function_arg_advance (cumulative_args_t cum_v, machine_mode mode,
 			   const_tree type, bool named)
 {
+  if (type && RECORD_OR_UNION_TYPE_P (type) && TYPE_EMPTY_RECORD (type))
+    return;
+
   CUMULATIVE_ARGS *cum = get_cumulative_args (cum_v);
   HOST_WIDE_INT bytes, words;
   int nregs;
@@ -9105,6 +9114,9 @@ static rtx
 ix86_function_arg (cumulative_args_t cum_v, machine_mode omode,
 		   const_tree type, bool named)
 {
+  if (type && RECORD_OR_UNION_TYPE_P (type) && TYPE_EMPTY_RECORD (type))
+    return NULL;
+
   CUMULATIVE_ARGS *cum = get_cumulative_args (cum_v);
   machine_mode mode = omode;
   HOST_WIDE_INT bytes, words;
@@ -9710,6 +9722,9 @@ ix86_libcall_value (machine_mode mode)
 static bool
 ix86_return_in_memory (const_tree type, const_tree fntype ATTRIBUTE_UNUSED)
 {
+  if (type && RECORD_OR_UNION_TYPE_P (type) && TYPE_EMPTY_RECORD (type))
+    return false;
+
 #ifdef SUBTARGET_RETURN_IN_MEMORY
   return SUBTARGET_RETURN_IN_MEMORY (type, fntype);
 #else

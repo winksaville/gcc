@@ -1104,7 +1104,7 @@ hash_tree (struct streamer_tree_cache_d *cache, hash_map<tree, hashval_t> *map, 
 	  hstate.add_flag (TYPE_TRANSPARENT_AGGR (t));
 	  hstate.add_flag (TYPE_FINAL_P (t));
 	}
-      else 
+      else
 	{
 	  hstate.add_flag (TYPE_RESTRICT (t));
 	  if (code == ARRAY_TYPE)

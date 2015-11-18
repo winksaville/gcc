@@ -1198,12 +1198,13 @@ block_move_libcall_safe_for_call_parm (void)
     for ( ; arg != void_list_node ; arg = TREE_CHAIN (arg))
       {
 	machine_mode mode = TYPE_MODE (TREE_VALUE (arg));
-	rtx tmp = function_arg (args_so_far, mode, NULL_TREE, true);
+	rtx tmp = targetm.calls.function_arg (args_so_far, mode,
+					      NULL_TREE, true);
 	if (!tmp || !REG_P (tmp))
 	  return false;
 	if (targetm.calls.arg_partial_bytes (args_so_far, mode, NULL, 1))
 	  return false;
-	function_arg_advance (args_so_far, mode,
+	targetm.calls.function_arg_advance (args_so_far, mode,
 					    NULL_TREE, true);
       }
   }

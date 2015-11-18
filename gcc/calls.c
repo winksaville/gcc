@@ -1391,8 +1391,8 @@ initialize_argument_information (int num_actuals ATTRIBUTE_UNUSED,
       args[i].unsignedp = unsignedp;
       args[i].mode = mode;
 
-      args[i].reg = function_arg (args_so_far, mode, type,
-				  argpos < n_named_args);
+      args[i].reg = targetm.calls.function_arg (args_so_far, mode, type,
+						argpos < n_named_args);
 
       if (args[i].reg && CONST_INT_P (args[i].reg))
 	{
@@ -1405,8 +1405,8 @@ initialize_argument_information (int num_actuals ATTRIBUTE_UNUSED,
 	 arguments have to go into the incoming registers.  */
       if (targetm.calls.function_incoming_arg != targetm.calls.function_arg)
 	args[i].tail_call_reg
-	  = function_incoming_arg (args_so_far, mode, type,
-				   argpos < n_named_args);
+	  = targetm.calls.function_incoming_arg (args_so_far, mode, type,
+						 argpos < n_named_args);
       else
 	args[i].tail_call_reg = args[i].reg;
 
@@ -1467,8 +1467,8 @@ initialize_argument_information (int num_actuals ATTRIBUTE_UNUSED,
       /* Increment ARGS_SO_FAR, which has info about which arg-registers
 	 have been used, etc.  */
 
-      function_arg_advance (args_so_far, TYPE_MODE (type), type,
-			    argpos < n_named_args);
+      targetm.calls.function_arg_advance (args_so_far, TYPE_MODE (type),
+					  type, argpos < n_named_args);
     }
 }
 
@@ -3320,11 +3320,14 @@ expand_call (tree exp, rtx target, int ignore)
       /* Set up next argument register.  For sibling calls on machines
 	 with register windows this should be the incoming register.  */
       if (pass == 0)
-	next_arg_reg = function_incoming_arg (args_so_far, VOIDmode,
-					      void_type_node, true);
+	next_arg_reg = targetm.calls.function_incoming_arg (args_so_far,
+							    VOIDmode,
+							    void_type_node,
+							    true);
       else
-	next_arg_reg = function_arg (args_so_far, VOIDmode,
-				     void_type_node, true);
+	next_arg_reg = targetm.calls.function_arg (args_so_far,
+						   VOIDmode, void_type_node,
+						   true);
 
       if (pass == 1 && (return_flags & ERF_RETURNS_ARG))
 	{
@@ -3936,8 +3939,8 @@ emit_library_call_value_1 (int retval, rtx orgfun, rtx value,
       argvec[count].mode = Pmode;
       argvec[count].partial = 0;
 
-      argvec[count].reg = function_arg (args_so_far, Pmode, NULL_TREE,
-					true);
+      argvec[count].reg = targetm.calls.function_arg (args_so_far,
+						      Pmode, NULL_TREE, true);
       gcc_assert (targetm.calls.arg_partial_bytes (args_so_far, Pmode,
 						   NULL_TREE, 1) == 0);
 
@@ -3954,7 +3957,7 @@ emit_library_call_value_1 (int retval, rtx orgfun, rtx value,
 	  || reg_parm_stack_space > 0)
 	args_size.constant += argvec[count].locate.size.constant;
 
-      function_arg_advance (args_so_far, Pmode, (tree) 0, true);
+      targetm.calls.function_arg_advance (args_so_far, Pmode, (tree) 0, true);
 
       count++;
     }
@@ -4019,7 +4022,7 @@ emit_library_call_value_1 (int retval, rtx orgfun, rtx value,
       mode = promote_function_mode (NULL_TREE, mode, &unsigned_p, NULL_TREE, 0);
       argvec[count].mode = mode;
       argvec[count].value = convert_modes (mode, GET_MODE (val), val, unsigned_p);
-      argvec[count].reg = function_arg (args_so_far, mode,
+      argvec[count].reg = targetm.calls.function_arg (args_so_far, mode,
 						      NULL_TREE, true);
 
       argvec[count].partial
@@ -4049,7 +4052,7 @@ emit_library_call_value_1 (int retval, rtx orgfun, rtx value,
 			     GET_MODE_SIZE (mode) <= UNITS_PER_WORD);
 #endif
 
-      function_arg_advance (args_so_far, mode, (tree) 0, true);
+      targetm.calls.function_arg_advance (args_so_far, mode, (tree) 0, true);
     }
 
   /* If this machine requires an external definition for library
@@ -4396,7 +4399,8 @@ emit_library_call_value_1 (int retval, rtx orgfun, rtx value,
 	       build_function_type (tfom, NULL_TREE),
 	       original_args_size.constant, args_size.constant,
 	       struct_value_size,
-	       function_arg (args_so_far, VOIDmode, void_type_node, true),
+	       targetm.calls.function_arg (args_so_far,
+					   VOIDmode, void_type_node, true),
 	       valreg,
 	       old_inhibit_defer_pop + 1, call_fusage, flags, args_so_far);
 

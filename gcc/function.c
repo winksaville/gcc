@@ -2073,7 +2073,7 @@ aggregate_value_p (const_tree exp, const_tree fntype)
   if (flag_pcc_struct_return && AGGREGATE_TYPE_P (type))
     return 1;
 
-  if (return_in_memory (type, fntype))
+  if (targetm.calls.return_in_memory (type, fntype))
     return 1;
 
   /* Make sure we have suitable call-clobbered regs to return
@@ -2523,10 +2523,10 @@ assign_parm_find_entry_rtl (struct assign_parm_data_all *all,
       return;
     }
 
-  entry_parm = function_incoming_arg (all->args_so_far,
-				      data->promoted_mode,
-				      data->passed_type,
-				      data->named_arg);
+  entry_parm = targetm.calls.function_incoming_arg (all->args_so_far,
+						    data->promoted_mode,
+						    data->passed_type,
+						    data->named_arg);
 
   if (entry_parm == 0)
     data->promoted_mode = data->passed_mode;
@@ -2550,9 +2550,9 @@ assign_parm_find_entry_rtl (struct assign_parm_data_all *all,
       if (targetm.calls.pretend_outgoing_varargs_named (all->args_so_far))
 	{
 	  rtx tem;
-	  tem = function_incoming_arg (all->args_so_far,
-				       data->promoted_mode,
-				       data->passed_type, true);
+	  tem = targetm.calls.function_incoming_arg (all->args_so_far,
+						     data->promoted_mode,
+						     data->passed_type, true);
 	  in_regs = tem != NULL;
 	}
     }
@@ -3752,8 +3752,8 @@ assign_parms (tree fndecl)
 	}
 
       /* Update info on where next arg arrives in registers.  */
-      function_arg_advance (all.args_so_far, data.promoted_mode,
-			    data.passed_type, data.named_arg);
+      targetm.calls.function_arg_advance (all.args_so_far, data.promoted_mode,
+					  data.passed_type, data.named_arg);
 
       if (POINTER_BOUNDS_TYPE_P (data.passed_type))
 	bound_no++;
@@ -3949,8 +3949,8 @@ gimplify_parameters (void)
 	continue;
 
       /* Update info on where next arg arrives in registers.  */
-      function_arg_advance (all.args_so_far, data.promoted_mode,
-			    data.passed_type, data.named_arg);
+      targetm.calls.function_arg_advance (all.args_so_far, data.promoted_mode,
+					  data.passed_type, data.named_arg);
 
       /* ??? Once upon a time variable_size stuffed parameter list
 	 SAVE_EXPRs (amongst others) onto a pending sizes list.  This
@@ -6824,6 +6824,8 @@ make_pass_match_asm_constraints (gcc::context *ctxt)
   return new pass_match_asm_constraints (ctxt);
 }
 
+#if 0
+
 /* Wrapper for targetm.calls.function_arg_advance.  */
 
 void
@@ -6870,6 +6872,6 @@ return_in_memory (const_tree type, const_tree fntype)
 
   return targetm.calls.return_in_memory (type, fntype);
 }
-
+#endif
 
 #include "gt-function.h"
