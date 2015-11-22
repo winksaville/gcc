@@ -13375,44 +13375,50 @@ ix86_expand_prologue (void)
      combined with prologue modifications.  */
   if (TARGET_SEH)
     emit_insn (gen_prologue_use (stack_pointer_rtx));
+}
 
-  if (cfun->machine->func_type != TYPE_NORMAL)
+/* Return the location where the argument appears to the callee for
+   debug output.  */
+
+static rtx
+ix86_function_incoming_arg_rtl (const_tree parmdecl)
+{
+  rtx arg = DECL_INCOMING_RTL (parmdecl);
+  if (cfun->machine->func_type != TYPE_NORMAL && REG_P (arg))
     {
       /* Replace INTERRUPT_FRAME_REG and INTERRUPT_ERROR_REG with
-	 argument pointer.  The first argument of interrupt handler
-	 is a pointer and points to the return address slot on stack.
-	 The optional second argument is an integer for error code
-	 on stack.  */
-      tree arg = DECL_ARGUMENTS (current_function_decl);
-      gcc_assert (arg != NULL_TREE
-		  && POINTER_TYPE_P (TREE_TYPE (arg))
-		  && REG_P (DECL_INCOMING_RTL (arg))
-		  && (REGNO (DECL_INCOMING_RTL (arg))
-		      == INTERRUPT_FRAME_REG));
-      if (cfun->machine->func_type == TYPE_EXCEPTION)
+	 argument pointer.  INTERRUPT_FRAME_REG is a pointer, pointing
+	 to the return address slot on stack.  INTERRUPT_ERROR_REG is
+	 an integer for error code on stack.  */
+      if (REGNO (arg) == INTERRUPT_FRAME_REG)
 	{
-	  /* (AP) in the current frame in exception handler.  */
-	  DECL_INCOMING_RTL (arg) = arg_pointer_rtx;
-	  arg = TREE_CHAIN (arg);
-	  gcc_assert (TREE_CODE (TREE_TYPE (arg)) == INTEGER_TYPE
-		      && TYPE_MODE (TREE_TYPE (arg))== word_mode
-		      && REG_P (DECL_INCOMING_RTL (arg))
-		      && (REGNO (DECL_INCOMING_RTL (arg))
-			  == INTERRUPT_ERROR_REG));
+	  gcc_assert (POINTER_TYPE_P (TREE_TYPE (parmdecl)));
+	  if (cfun->machine->func_type == TYPE_EXCEPTION)
+	    /* (AP) in the current frame in exception handler.  */
+	    return arg_pointer_rtx;
+	  else
+	    /* -WORD(AP) in the current frame in interrupt handler.  */
+	    return plus_constant (Pmode,
+				  arg_pointer_rtx,
+				  -UNITS_PER_WORD);
+	}
+      else if (REGNO (arg) == INTERRUPT_ERROR_REG)
+	{
+	  gcc_assert (cfun->machine->func_type == TYPE_EXCEPTION
+		      && TREE_CODE (TREE_TYPE (parmdecl)) == INTEGER_TYPE
+		      && TYPE_MODE (TREE_TYPE (parmdecl)) == word_mode);
 	  /* The error code is at -WORD(AP) in the current frame in
 	     exception handler.  */
-	  DECL_INCOMING_RTL (arg)
-	    = gen_rtx_MEM (word_mode,
-			   plus_constant (Pmode,
-					  arg_pointer_rtx,
-					  -UNITS_PER_WORD));
+	  return gen_rtx_MEM (word_mode,
+			      plus_constant (Pmode,
+					     arg_pointer_rtx,
+					     -UNITS_PER_WORD));
 	}
       else
-	/* -WORD(AP) in the current frame in interrupt handler.  */
-	DECL_INCOMING_RTL (arg) = plus_constant (Pmode,
-						 arg_pointer_rtx,
-						 -UNITS_PER_WORD);
+	gcc_unreachable ();
     }
+  else
+    return arg;
 }
 
 /* Emit code to restore REG using a POP insn.  */
@@ -54963,6 +54969,9 @@ ix86_addr_space_zero_address_valid (addr_space_t as)
 #define TARGET_FUNCTION_ARG_ADVANCE ix86_function_arg_advance
 #undef TARGET_FUNCTION_ARG
 #define TARGET_FUNCTION_ARG ix86_function_arg
+#undef TARGET_FUNCTION_INCOMING_ARG_RTL
+#define TARGET_FUNCTION_INCOMING_ARG_RTL \
+  ix86_function_incoming_arg_rtl
 #undef TARGET_INIT_PIC_REG
 #define TARGET_INIT_PIC_REG ix86_init_pic_reg
 #undef TARGET_USE_PSEUDO_PIC_REG
