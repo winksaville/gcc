@@ -151,7 +151,7 @@
 ;;  w  Call memory operand, not valid for TARGET_X32
 ;;  z  Constant call address operand.
 
-(define_constraint "Bm"
+(define_memory_constraint "Bm"
   "@internal Vector memory operand."
   (match_operand 0 "vector_memory_operand"))
 
