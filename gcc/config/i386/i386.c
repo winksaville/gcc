@@ -12322,8 +12322,13 @@ ix86_expand_prologue (void)
   if (frame_pointer_needed && frame.red_zone_size)
     emit_insn (gen_memory_blockage ());
 
-  /* Emit cld instruction if stringops are used in the function.  */
-  if (TARGET_CLD && ix86_current_function_needs_cld)
+  /* Emit cld instruction if stringops are used in the function.  Since
+     we can't assume the direction flag in interrupt handler, we must
+     emit cld instruction if stringops are used in interrupt handler or
+     interrupt handler isn't a leaf function.  */
+  if ((TARGET_CLD && ix86_current_function_needs_cld)
+      || (cfun->machine->func_type != TYPE_NORMAL
+	  && (ix86_current_function_needs_cld || !crtl->is_leaf)))
     emit_insn (gen_cld ());
 
   /* SEH requires that the prologue end within 256 bytes of the start of

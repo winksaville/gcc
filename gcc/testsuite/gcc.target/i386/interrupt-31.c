@@ -25,3 +25,5 @@ my_isr(struct interrupt_frame *frame)
 {
   handler();
 }
+
+/* { dg-final { scan-assembler-times "cld" 1 } } */

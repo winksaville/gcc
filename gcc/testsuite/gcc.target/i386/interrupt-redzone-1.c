@@ -29,3 +29,4 @@ fn (void *frame)
 }
 
 /* { dg-final { scan-assembler-not "(sub|add)(l|q)\[\\t \]*\\$\[0-9\]*,\[\\t \]*%\[re\]?sp" } } */
+/* { dg-final { scan-assembler-not "cld" } } */

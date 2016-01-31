@@ -22,3 +22,4 @@ foo (struct interrupt_frame *frame)
 /* { dg-final { scan-assembler-not "pushq\[\\t \]*%r1\[2-5\]+" { target { ! ia32 } } } } */
 /* { dg-final { scan-assembler-not "pushl\[\\t \]*%ebx" { target ia32 } } } */
 /* { dg-final { scan-assembler-not "pushl\[\\t \]*%e(s|d)i" { target ia32 } } } */
+/* { dg-final { scan-assembler-times "cld" 1 } } */

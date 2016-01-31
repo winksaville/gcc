@@ -13,3 +13,4 @@ fn (void)
 
 /* { dg-final { scan-assembler-times "movaps\[\\t \]*%xmm0,\[\\t \]*-?\[0-9\]*\\(%\[re\]?sp\\)" 1 } } */
 /* { dg-final { scan-assembler-times "movaps\[\\t \]*-?\[0-9\]*\\(%\[re\]?sp\\),\[\\t \]*%xmm0" 1 } } */
+/* { dg-final { scan-assembler-not "cld" } } */

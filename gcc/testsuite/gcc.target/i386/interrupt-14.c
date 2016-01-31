@@ -38,3 +38,4 @@ foo (void *frame)
 /* { dg-final { scan-assembler-times "popq\[\\t \]*%r11" 1 { target { ! ia32 } } } } */
 /* { dg-final { scan-assembler-times "iret" 1 { target ia32 } } } */
 /* { dg-final { scan-assembler-times "iretq" 1 { target { ! ia32 } } } } */
+/* { dg-final { scan-assembler-times "cld" 1 } } */

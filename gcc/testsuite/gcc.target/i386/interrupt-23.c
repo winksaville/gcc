@@ -23,3 +23,4 @@ fn (void)
 /* { dg-final { scan-assembler-not "(push|pop)(l|q)\[\\t \]*%(r|e)(s|d)i" } } */
 /* { dg-final { scan-assembler-not "(push|pop)(l|q)\[\\t \]*%(r|e)bp" } } */
 /* { dg-final { scan-assembler-not "(push|pop)q\[\\t \]*%r\[0-9\]+" { target { ! ia32 } } } } */
+/* { dg-final { scan-assembler-not "cld" } } */

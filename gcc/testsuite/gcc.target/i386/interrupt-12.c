@@ -17,5 +17,6 @@ foo (void *frame, uword_t error_code)
 /* { dg-final { scan-assembler-times "and\[lq\]?\[^\\n\]*-64,\[^\\n\]*sp" 1 } } */
 /* { dg-final { scan-assembler-times "add(?:l|q)\[\\t \]*\\\$8,\[\\t \]*%\[re\]?sp" 1 { target { ! ia32 } } } } */
 /* { dg-final { scan-assembler-times "addl\[\\t \]*\\\$4,\[\\t \]*%esp" 1 { target ia32 } } } */
-/* { dg-final { scan-assembler "iret" { target ia32 } } } */
-/* { dg-final { scan-assembler "iretq" { target { ! ia32 } } } } */
+/* { dg-final { scan-assembler-times "iret" 1 { target ia32 } } } */
+/* { dg-final { scan-assembler-times "iretq" 1 { target { ! ia32 } } } } */
+/* { dg-final { scan-assembler-times "cld" 1 } } */

@@ -13,5 +13,6 @@ fn (void *frame)
 
 /* { dg-final { scan-assembler-times "vmovups\[\\t \]*%ymm3,\[\\t \]*-?\[0-9\]*\\(%\[re\]?sp\\)" 1 } } */
 /* { dg-final { scan-assembler-times "vmovups\[\\t \]*-?\[0-9\]*\\(%\[re\]?sp\\),\[\\t \]*%ymm3" 1 } } */
-/* { dg-final { scan-assembler "iret" { target ia32 } } } */
-/* { dg-final { scan-assembler "iretq" { target { ! ia32 } } } } */
+/* { dg-final { scan-assembler-times "iret" 1 { target ia32 } } } */
+/* { dg-final { scan-assembler-times "iretq" 1 { target { ! ia32 } } } } */
+/* { dg-final { scan-assembler-not "cld" } } */

@@ -29,3 +29,4 @@ fn2 (void *frame)
 /* { dg-final { scan-assembler-times "movq\[\\t \]*-8\\(%(?:r|e)bp\\),\[\\t \]*%rdi" 2 { target { ! ia32 } } } } */
 /* { dg-final { scan-assembler-times "iret" 2 { target ia32 } } } */
 /* { dg-final { scan-assembler-times "iretq" 2 { target { ! ia32 } } } } */
+/* { dg-final { scan-assembler-times "cld" 2 } } */

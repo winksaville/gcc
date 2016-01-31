@@ -14,5 +14,6 @@ foo (void *frame)
 }
 
 /* { dg-final { scan-assembler-times "and\[lq\]?\[^\\n\]*-64,\[^\\n\]*sp" 1 } } */
-/* { dg-final { scan-assembler "iret" { target ia32 } } } */
-/* { dg-final { scan-assembler "iretq" { target { ! ia32 } } } } */
+/* { dg-final { scan-assembler-times "iret" 1 { target ia32 } } } */
+/* { dg-final { scan-assembler-times "iretq" 1 { target { ! ia32 } } } } */
+/* { dg-final { scan-assembler-times "cld" 1 } } */

@@ -15,3 +15,4 @@ void f5 (void){  bar (5); }
 /* { dg-final { scan-assembler-times "pop.\t%.ax" 2 } } */
 /* { dg-final { scan-assembler-times "iret" 2 { target ia32 } } } */
 /* { dg-final { scan-assembler-times "iretq" 2 { target { ! ia32 } } } } */
+/* { dg-final { scan-assembler-times "cld" 2 } } */

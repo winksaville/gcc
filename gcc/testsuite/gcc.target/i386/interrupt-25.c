@@ -22,3 +22,4 @@ fn (void)
 /* { dg-final { scan-assembler-not "(push|pop)l\[\\t \]*%e(a|b|c|d)x" } } */
 /* { dg-final { scan-assembler-not "(push|pop)l\[\\t \]*%e(s|d)i" } } */
 /* { dg-final { scan-assembler-not "(push|pop)l\[\\t \]*%ebp" } } */
+/* { dg-final { scan-assembler-not "cld" } } */

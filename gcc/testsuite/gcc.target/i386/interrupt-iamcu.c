@@ -32,4 +32,5 @@ void foo (void *frame)
 /* { dg-final { scan-assembler-times "popl\[\\t \]*%edi" 1 } } */
 /* { dg-final { scan-assembler-times "popl\[\\t \]*%esi" 1 } } */
 /* { dg-final { scan-assembler-times "popl\[\\t \]*%ebp" 1 } } */
-/* { dg-final { scan-assembler "iret" } } */
+/* { dg-final { scan-assembler-times "iret" 1 } } */
+/* { dg-final { scan-assembler-times "cld" 1 } } */
